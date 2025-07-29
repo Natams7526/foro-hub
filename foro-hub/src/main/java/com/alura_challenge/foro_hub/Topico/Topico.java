@@ -37,7 +37,7 @@ public class Topico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String título;
+	private String titulo;
 
 	private String mensaje;
 
@@ -57,7 +57,7 @@ public class Topico {
 
 	public void actualizar(DatosActualizarTopico datos) {
 		if (datos.titulo() != null)
-			this.título = datos.titulo();
+			this.titulo = datos.titulo();
 		if (datos.mensaje() != null)
 			this.mensaje = datos.mensaje();
 	}

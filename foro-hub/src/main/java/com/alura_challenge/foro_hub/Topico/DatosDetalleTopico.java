@@ -14,7 +14,7 @@ public record DatosDetalleTopico(
     public DatosDetalleTopico(Topico topico) {
         this(
             topico.getId(),
-            topico.getTítulo(),
+            topico.getTitulo(),
             topico.getMensaje(),
             topico.getStatus().name(),
             topico.getAutor().getNombre(),

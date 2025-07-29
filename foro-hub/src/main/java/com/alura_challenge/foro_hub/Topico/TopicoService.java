@@ -35,7 +35,7 @@ public class TopicoService {
 		var curso = cursoRepository.getReferenceById(datos.cursoId());
 		var topico = new Topico();
 
-		topico.setTítulo(datos.titulo());
+		topico.setTitulo(datos.titulo());
 		topico.setMensaje(datos.mensaje());
 		topico.setAutor(autor);
 		topico.setCurso(curso);

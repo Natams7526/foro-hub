@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alura_challenge.foro_hub.Usuario.DatosAutenticacion;
+import com.alura_challenge.foro_hub.Usuario.Usuario;
+import com.alura_challenge.foro_hub.controller.infra.security.DatosTokenJWT;
+import com.alura_challenge.foro_hub.controller.infra.security.TokenService;
 
 import jakarta.validation.Valid;
 
@@ -18,15 +21,20 @@ import jakarta.validation.Valid;
 public class AuthenticationController {
 	
 	@Autowired
+	private TokenService tokenService;
+	
+	@Autowired
 	private AuthenticationManager manager;
 	
 	@PostMapping
 	public ResponseEntity iniciarSesion(@RequestBody @Valid DatosAutenticacion datos) {
 		
-		var token = new UsernamePasswordAuthenticationToken(datos.nombre(), datos.contrasena());
-		var autenticacion = manager.authenticate(token);
+		var authenticationToken = new UsernamePasswordAuthenticationToken(datos.nombre(), datos.contrasena());
+		var autenticacion = manager.authenticate(authenticationToken);
 		
-		return ResponseEntity.ok().build();
+		var tokenJWT = tokenService.generarToken((Usuario) autenticacion.getPrincipal());
+
+        return ResponseEntity.ok(new DatosTokenJWT(tokenJWT));
 	}
 
 }

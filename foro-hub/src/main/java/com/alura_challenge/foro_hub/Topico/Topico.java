@@ -24,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Table(name = "topicos")
 @Entity(name = "topico")
 @Getter
@@ -33,26 +32,37 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Topico {
-	
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
 
-	 private String título;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	private String título;
 
 	private String mensaje;
 
 	private LocalDateTime fechaCreación = LocalDateTime.now();
 
 	@Enumerated(EnumType.STRING)
-    private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+	private StatusTopico status = StatusTopico.NO_RESPONDIDO;
 
 	@ManyToOne
-    private Usuario autor;
+	private Usuario autor;
 
 	@ManyToOne
-    private Curso curso;
+	private Curso curso;
 
-    @OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
-    private List<Respuesta> respuestas = new ArrayList<>();
+	@OneToMany(mappedBy = "topico", cascade = CascadeType.ALL)
+	private List<Respuesta> respuestas = new ArrayList<>();
+
+	public void actualizar(DatosActualizarTopico datos) {
+		if (datos.titulo() != null)
+			this.título = datos.titulo();
+		if (datos.mensaje() != null)
+			this.mensaje = datos.mensaje();
+	}
+
+	public void marcarComoEliminado() {
+		this.status = StatusTopico.ELIMINADO;
+	}
 }

@@ -1,5 +1,7 @@
 package com.alura_challenge.foro_hub.Topico;
 
-public record DatosActualizarTopico(Long id, String titulo, String mensaje) {
+import jakarta.validation.constraints.NotNull;
+
+public record DatosActualizarTopico(@NotNull Long id, String titulo, String mensaje) {
 
 }

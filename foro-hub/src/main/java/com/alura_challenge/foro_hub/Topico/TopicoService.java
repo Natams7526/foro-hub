@@ -2,6 +2,7 @@ package com.alura_challenge.foro_hub.Topico;
 
 import java.time.LocalDateTime;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,8 @@ import org.springframework.stereotype.Service;
 import com.alura_challenge.foro_hub.Usuario.CursoRepository;
 import com.alura_challenge.foro_hub.Usuario.UsuarioRepository;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class TopicoService {
@@ -26,6 +28,9 @@ public class TopicoService {
 
 	@Transactional
 	public Topico crearTopico(DatosRegistroTopico datos) {
+		if (topicoRepository.existsByTituloAndMensaje(datos.titulo(), datos.mensaje())) {
+	        throw new IllegalArgumentException("Ya existe un tópico con el mismo título y mensaje.");
+	    }
 		var autor = usuarioRepository.getReferenceById(datos.autorId());
 		var curso = cursoRepository.getReferenceById(datos.cursoId());
 		var topico = new Topico();
@@ -47,20 +52,24 @@ public class TopicoService {
 
 	@Transactional
 	public Topico actualizar(DatosActualizarTopico datos) {
-		var topico = topicoRepository.getReferenceById(datos.id());
+		var topico = topicoRepository.findById(datos.id())
+		        .orElseThrow(() -> new EntityNotFoundException("Tópico no encontrado con ID: " + datos.id()));
 		topico.actualizar(datos);
 		return topico;
 	}
 
 	@Transactional
 	public void eliminar(Long id) {
-		var topico = topicoRepository.getReferenceById(id);
+		var topico = topicoRepository.findById(id)
+		        .orElseThrow(() -> new EntityNotFoundException("Tópico no encontrado con ID: " + id));
 		topico.marcarComoEliminado();
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public DatosDetalleTopico detallar(Long id) {
-		var topico = topicoRepository.getReferenceById(id);
-		return new DatosDetalleTopico(topico);
+	    var topico = topicoRepository.findById(id)
+	        .orElseThrow(() -> new EntityNotFoundException("Tópico no encontrado"));
+
+	    return new DatosDetalleTopico(topico);
 	}
 }

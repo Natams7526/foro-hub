@@ -60,9 +60,7 @@ El token debe incluirse en el header de las peticiones autenticadas como:
 
 Authorization: Bearer <token>
 
-yaml
-Copiar
-Editar
+
 
 ---
 
